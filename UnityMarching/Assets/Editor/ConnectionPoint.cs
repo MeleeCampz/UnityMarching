@@ -6,33 +6,15 @@ namespace SDFEditor
 	public enum ConnectionPointType { In, Out }
 
 	[Serializable]
-	public struct ConnectionPointData
-	{
-		public string id;
-	}
-
 	public class ConnectionPoint
 	{
-		public ConnectionPointData Data
-		{
-			get
-			{
-				return new ConnectionPointData()
-				{
-					id = id
-				};
-			}
-		}
-
 		public string id;
 
-		public Rect rect;
+		[NonSerialized]public Rect rect;
+		[NonSerialized] public ConnectionPointType type;
 
-		public ConnectionPointType type;
-
-		public SDFNode node;
-
-		public GUIStyle style;
+		[NonSerialized] public SDFNode node;
+		[NonSerialized] public GUIStyle style;
 
 		public Action<ConnectionPoint> OnClickConnectionPoint;
 
@@ -48,9 +30,9 @@ namespace SDFEditor
 			this.id = id ?? Guid.NewGuid().ToString();
 		}
 
-		public void Draw()
+		public void Draw(int index)
 		{
-			rect.y = node.rect.y + (node.rect.height * 0.5f) - rect.height * 0.5f;
+			rect.y = node.rect.y + (node.rect.height * 0.5f) - rect.height * 0.5f + rect.height * index;
 
 			switch (type)
 			{

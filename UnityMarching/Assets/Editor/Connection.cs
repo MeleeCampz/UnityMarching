@@ -5,30 +5,13 @@ using UnityEngine;
 namespace SDFEditor
 {
 	[Serializable]
-	public struct ConnectionData
-	{
-		public ConnectionPointData inPoint;
-		public ConnectionPointData outPoint;
-	}
-
 	public class Connection
 	{
-		public ConnectionData Data
-		{
-			get
-			{
-				return new ConnectionData()
-				{
-					inPoint = inPoint.Data,
-					outPoint = outPoint.Data
-				};
-			}
-		}
-
 		public ConnectionPoint inPoint;
 		public ConnectionPoint outPoint;
 		public Action<Connection> OnClickRemoveConnection;
 
+		//Used when constructing a new connection
 		public Connection(ConnectionPoint inPoint, ConnectionPoint outPoint, Action<Connection> OnClickRemoveConnection)
 		{
 			this.inPoint = inPoint;
