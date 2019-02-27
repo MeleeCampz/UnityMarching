@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4674494f99eefb7419ff866fed621058, type: 3}
+  m_Name: SDFGraphAsset
+  m_EditorClassIdentifier: 
+  sdfNodeData:
+  - rect:
+      serializedVersion: 2
+      x: 154
+      y: 67
+      width: 200
+      height: 50
+    inPoint:
+      id: 77af8359-5469-4d36-bce8-fa5c105a8c45
+    outPoint:
+      id: 4157e53c-d077-44c4-a235-0fd42011e97b
+  - rect:
+      serializedVersion: 2
+      x: 492
+      y: 79
+      width: 200
+      height: 50
+    inPoint:
+      id: 24330ee2-d773-4963-ba9d-a3999d7a121a
+    outPoint:
+      id: 9d3823cc-1e15-4a0c-98f1-7358d30ef343
+  - rect:
+      serializedVersion: 2
+      x: 746
+      y: 188
+      width: 200
+      height: 50
+    inPoint:
+      id: b583e046-12e2-4542-9bb9-ba80b0638326
+    outPoint:
+      id: 823f2500-ede3-48fd-830f-a0ea75a7a285
+  connectionData:
+  - inPoint:
+      id: 24330ee2-d773-4963-ba9d-a3999d7a121a
+    outPoint:
+      id: 4157e53c-d077-44c4-a235-0fd42011e97b
+  - inPoint:
+      id: b583e046-12e2-4542-9bb9-ba80b0638326
+    outPoint:
+      id: 9d3823cc-1e15-4a0c-98f1-7358d30ef343

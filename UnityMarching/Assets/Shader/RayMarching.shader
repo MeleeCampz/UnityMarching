@@ -18,6 +18,9 @@
 
 			#include "UnityCG.cginc"
 			#include "DistanceFunctions.cginc"
+			
+			//#include "SimplexNoise3D.hlsl"
+			#include "SimplexNoise2D.hlsl"
 
 			sampler2D _MainTex;
 			uniform sampler2D _CameraDepthTexture;
@@ -82,8 +85,24 @@
 				return combine2;
 			}
 
+			float SimplexNoise2D(float3 p, float2 s, float h)
+			{
+				return p.y + snoise(p.xz * s) * h;
+			}
+
+
+			//float SimplexNoise3D(float3 p)
+			//{
+			//	return length(snoise(p));
+			//}
+
 			float distanceField(float3 p)
 			{				
+				float n1 = SimplexNoise2D(p, float2(1, 1)*0.015, 50.5);
+				float n2 = SimplexNoise2D(p, float2(1, 1)*0.1, 1.5);
+				
+				float nc = n1 + n2;//opU(opSS(n2, n1, _SphereIntersectionSmooth), p.y, 0.1);
+
 				float ground = sdPlane(p, float4(0, 1, 0, 0));
 				
 				if (_Repetation > 0)
@@ -93,12 +112,12 @@
 
 				float boxSphere1 = BoxSphere(p + float3(0,-0,0));
 
-				return opU(ground, boxSphere1);
+				return opUS(opU(ground, boxSphere1), nc, 5);
 			}
 
 			float3 getNormal(float3 p)
 			{
-				const float2 offset = float2(0.0001, 0.0);
+				const float2 offset = float2(0.001, 0.0);
 				float3 n = float3(
 					distanceField(p + offset.xyy) - distanceField(p - offset.xyy),
 					distanceField(p + offset.yxy) - distanceField(p - offset.yxy),
