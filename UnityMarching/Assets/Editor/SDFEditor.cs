@@ -256,7 +256,7 @@ namespace SDFEditor
 				//Reverse traveser array in case we delete something
 				for (int i = _graph.connections.Count -1; i>=0; i--)
 				{
-					_graph.connections[i].Draw();
+					_graph.connections[i].Draw(this);
 				}
 			}
 		}
@@ -335,7 +335,7 @@ namespace SDFEditor
 				_graph.connections = new List<Connection>();
 			}
 
-			Connection connection = new Connection(_selectedInPoint, _selectedOutPoint, OnClickRemoveConnection);
+			Connection connection = new Connection(_selectedInPoint, _selectedOutPoint);
 			_graph.connections.Add(connection);
 		}
 

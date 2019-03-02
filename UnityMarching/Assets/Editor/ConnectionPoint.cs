@@ -28,8 +28,10 @@ namespace SDFEditor
 		public virtual void OnAfterDeserialize(SDFNode node)
 		{
 			this.node = node;
+			node.graph.connectionPointMapping.Add(id, this);
 			Init();
 		}
+
 
 		public void Draw(int index, Rect contentRect, SDFEditor editor)
 		{

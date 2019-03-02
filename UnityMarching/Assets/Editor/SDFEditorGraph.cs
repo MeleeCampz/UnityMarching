@@ -10,7 +10,10 @@ namespace SDFEditor
 	[System.Serializable]
 	public class SDFEditorGraph : ScriptableObject
 	{
-		public SDFEditor editor;
+		[NonSerialized]
+		//Only used to setup the connections after deserialization
+		public Dictionary<string, ConnectionPoint> connectionPointMapping;
+
 		//[HideInInspector]
 		public List<SDFNode> nodes;
 		//[HideInInspector]
@@ -19,10 +22,17 @@ namespace SDFEditor
 		private void OnEnable()
 		{
 			Debug.Log("Graph: Deserialized!");
+
+			connectionPointMapping = new Dictionary<string, ConnectionPoint>();
 			foreach (var node in nodes)
 			{
 				node.OnAfterDeserialize(this);
 			}
+			foreach(var con in connections)
+			{
+				con.OnAfterDeserialize(this);
+			}
+
 		}
 	}
 }

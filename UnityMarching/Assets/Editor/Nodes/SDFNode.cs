@@ -15,6 +15,7 @@ namespace SDFEditor
 		public SDFEditorGraph graph;
 
 		public Rect rect;
+		public Rect titleRect;
 		public string title;
 
 		//Fields are not serialized by default
@@ -69,7 +70,9 @@ namespace SDFEditor
 
 			const int titelHeight = 20;
 
-			GUI.Box(new Rect(rect.x, rect.y, rect.width, titelHeight),title);
+			titleRect = new Rect(rect.x, rect.y, rect.width, titelHeight);
+
+			GUI.Box(titleRect,title);
 
 			Rect contentRect = rect;
 			contentRect.height -= titelHeight;
@@ -101,11 +104,17 @@ namespace SDFEditor
 					if (e.button == 0)
 					{
 						if (rect.Contains(e.mousePosition))
+						//if (titleRect.Contains(e.mousePosition))
 						{
 							IsDragged = true;
 							GUI.changed = true;
 							IsSelected = true;
 						}
+						//else if(rect.Contains(e.mousePosition))
+						//{
+						//	GUI.changed = true;
+						//	IsSelected = true;
+						//}
 						else
 						{
 							GUI.changed = true;

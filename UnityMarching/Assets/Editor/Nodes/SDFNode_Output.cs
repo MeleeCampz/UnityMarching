@@ -17,7 +17,7 @@ namespace SDFEditor
 
 		protected override void OnFinishedInit()
 		{
-			title = "Output";
+			title = "Output Node";
 			rect = new Rect(rect.x, rect.y, 80, 200);
 		}
 	}
