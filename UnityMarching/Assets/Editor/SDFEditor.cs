@@ -11,10 +11,10 @@ namespace SDFEditor
 
 	public class SDFEditor : EditorWindow
 	{
-		private GUIStyle _nodeStyle;
-		private GUIStyle _selectedNodeStyle;
-		private GUIStyle _inPointStyle;
-		private GUIStyle _outPointStyle;
+		public GUIStyle NodeStyle { get; private set; }
+		public GUIStyle SelectedNodeStyle { get; private set; }
+		public GUIStyle InPointStyle { get; private set; }
+		public GUIStyle OutPointStyle { get; private set; }
 
 		private ConnectionPoint _selectedInPoint;
 		private ConnectionPoint _selectedOutPoint;
@@ -25,7 +25,7 @@ namespace SDFEditor
 		private readonly float _menuBarHeight = 20f;
 		private Rect _menuBar;
 
-		private SDFGraphAsset _graph;
+		private SDFEditorGraph _graph;
 
 		[MenuItem("Window/SDF Editor")]
 		private static void OpenWindow()
@@ -36,23 +36,25 @@ namespace SDFEditor
 
 		private void OnEnable()
 		{
-			_nodeStyle = new GUIStyle();
-			_nodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
-			_nodeStyle.border = new RectOffset(12, 12, 12, 12);
+			NodeStyle = new GUIStyle();
+			NodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
+			NodeStyle.border = new RectOffset(12, 12, 12, 12);
 
-			_selectedNodeStyle = new GUIStyle();
-			_selectedNodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1 on.png") as Texture2D;
-			_selectedNodeStyle.border = new RectOffset(12, 12, 12, 12);
+			SelectedNodeStyle = new GUIStyle();
+			SelectedNodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1 on.png") as Texture2D;
+			SelectedNodeStyle.border = new RectOffset(12, 12, 12, 12);
 
-			_inPointStyle = new GUIStyle();
-			_inPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn left.png") as Texture2D;
-			_inPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn left on.png") as Texture2D;
-			_inPointStyle.border = new RectOffset(4, 4, 12, 12);
+			InPointStyle = new GUIStyle();
+			InPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn left.png") as Texture2D;
+			InPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn left on.png") as Texture2D;
+			InPointStyle.border = new RectOffset(4, 4, 12, 12);
 
-			_outPointStyle = new GUIStyle();
-			_outPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right.png") as Texture2D;
-			_outPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right on.png") as Texture2D;
-			_outPointStyle.border = new RectOffset(4, 4, 12, 12);
+			OutPointStyle = new GUIStyle();
+			OutPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right.png") as Texture2D;
+			OutPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right on.png") as Texture2D;
+			OutPointStyle.border = new RectOffset(4, 4, 12, 12);
+
+
 		}
 
 		private void OnGUI()
@@ -63,10 +65,11 @@ namespace SDFEditor
 
 			DrawControlButtons();
 
-			if(_graph == null)
+			if (_graph == null)
 			{
 				return;
 			}
+
 
 			DrawNodes();
 			DrawConnections();
@@ -76,6 +79,74 @@ namespace SDFEditor
 			ProcessEvents(Event.current);
 
 			if (GUI.changed) Repaint();
+		}
+
+		public void OnClickRemoveNode(SDFNode node)
+		{
+			if (_graph.connections != null)
+			{
+				List<Connection> connectionsToRemove = new List<Connection>();
+
+				foreach (var connection in _graph.connections)
+				{
+					if (node.inPoints.Any(x => x.node == connection.outPoint.node) || node.outPoints.Any(x => x.node == connection.inPoint.node))
+					{
+						connectionsToRemove.Add(connection);
+					}
+				}
+
+				foreach (var conToRemove in connectionsToRemove)
+				{
+					_graph.connections.Remove(conToRemove);
+				}
+
+				connectionsToRemove = null;
+			}
+			_graph.nodes.Remove(node);
+			DestroyImmediate(node, true);
+			AssetDatabase.SaveAssets();
+		}
+
+		public void OnClickInPoint(ConnectionPoint inPoint)
+		{
+			_selectedInPoint = inPoint;
+
+			if (_selectedOutPoint != null)
+			{
+				if (_selectedOutPoint.node != _selectedInPoint.node)
+				{
+					CreateConnection();
+					ClearConnectionSelection();
+				}
+				else
+				{
+					ClearConnectionSelection();
+				}
+			}
+		}
+
+		public void OnClickOutPoint(ConnectionPoint outPoint)
+
+		{
+			_selectedOutPoint = outPoint;
+
+			if (_selectedInPoint != null)
+			{
+				if (_selectedOutPoint.node != _selectedInPoint.node)
+				{
+					CreateConnection();
+					ClearConnectionSelection();
+				}
+				else
+				{
+					ClearConnectionSelection();
+				}
+			}
+		}
+
+		public void OnClickRemoveConnection(Connection connection)
+		{
+			_graph.connections.Remove(connection);
 		}
 
 		private void DrawMenuBar()
@@ -89,26 +160,15 @@ namespace SDFEditor
 			{
 				Save();
 			}
-			//GUILayout.Space(5);
-			//if (GUILayout.Button(new GUIContent("Load"), EditorStyles.toolbarButton, GUILayout.Width(50)))
-			//{
-			//	Load();
-			//}
 			GUILayout.Space(5);
-			if(GUILayout.Button(new GUIContent("Clear"), EditorStyles.toolbarButton, GUILayout.Width(50)))
+			if (GUILayout.Button(new GUIContent("Clear"), EditorStyles.toolbarButton, GUILayout.Width(50)))
 			{
 				Clear();
 			}
 
-			using (var check = new EditorGUI.ChangeCheckScope())
-			{
-				_graph = EditorGUILayout.ObjectField(_graph, typeof(SDFGraphAsset), false) as SDFGraphAsset;
 
-				//if (check.changed)
-				//{
-				//	Load();
-				//}
-			}
+			SDFEditorGraph before = _graph;
+			_graph = EditorGUILayout.ObjectField(_graph, typeof(SDFEditorGraph), false) as SDFEditorGraph;
 
 			GUILayout.EndHorizontal();
 			GUILayout.EndArea();
@@ -145,28 +205,6 @@ namespace SDFEditor
 			GUILayout.EndVertical();
 		}
 
-		private void DrawNodes()
-		{
-			if ((_graph.nodes != null))
-			{
-				foreach (var node in _graph.nodes)
-				{
-					node.Draw();
-				}
-			}
-		}
-
-		private void DrawConnections()
-		{
-			if (_graph.connections != null)
-			{
-				foreach (var con in _graph.connections)
-				{
-					con.Draw();
-				}
-			}
-		}
-
 		private void DrawConnectionLine(Event e)
 		{
 			if (_selectedInPoint != null && _selectedOutPoint == null)
@@ -200,6 +238,29 @@ namespace SDFEditor
 			}
 		}
 
+		private void DrawNodes()
+		{
+			if ((_graph.nodes != null))
+			{
+				foreach (var node in _graph.nodes)
+				{
+					node.Draw(this);
+				}
+			}
+		}
+
+		private void DrawConnections()
+		{
+			if (_graph.connections != null)
+			{
+				//Reverse traveser array in case we delete something
+				for (int i = _graph.connections.Count -1; i>=0; i--)
+				{
+					_graph.connections[i].Draw();
+				}
+			}
+		}
+
 		private void ProcessEvents(Event e)
 		{
 			_drag = Vector2.zero;
@@ -211,7 +272,7 @@ namespace SDFEditor
 					{
 						ProcessContextMenu(e.mousePosition);
 					}
-					else if(e.button == 0)
+					else if (e.button == 0)
 					{
 						//Deselect if we click nothing
 						_selectedInPoint = null;
@@ -234,7 +295,7 @@ namespace SDFEditor
 			{
 				for (int i = _graph.nodes.Count - 1; i >= 0; i--)
 				{
-					bool guiChanged = _graph.nodes[i].ProcessEvents(e);
+					bool guiChanged = _graph.nodes[i].ProcessEvents(e, this);
 
 					if (guiChanged)
 					{
@@ -247,12 +308,12 @@ namespace SDFEditor
 		private void ProcessContextMenu(Vector2 mousePosition)
 		{
 			GenericMenu genericMenu = new GenericMenu();
-			//genericMenu.AddItem(new GUIContent("Add node"), false, () => OnClickAddNode<SDFNode>(mousePosition));
+			genericMenu.AddItem(new GUIContent("Add example node"), false, () => OnClickAddNode<SDFNode_Example>(mousePosition));
 			genericMenu.AddItem(new GUIContent("Add output node"), false, () => OnClickAddNode<SDFNode_Output>(mousePosition));
 			genericMenu.ShowAsContext();
 		}
 
-		private void OnClickAddNode<T>(Vector2 mousePosition) where T : SDFNode, new()
+		public void OnClickAddNode<T>(Vector2 mousePosition) where T : SDFNode, new()
 		{
 			if (_graph.nodes == null)
 			{
@@ -260,95 +321,11 @@ namespace SDFEditor
 			}
 
 			SDFNode newNode = CreateInstance<T>();
-			newNode.Init(mousePosition, _nodeStyle, _selectedNodeStyle,
-				_inPointStyle, _outPointStyle, OnClickInPoint, OnClickOutPoint,
-				OnClickRemoveNode);
+			newNode.Init(mousePosition);
 
 			AssetDatabase.AddObjectToAsset(newNode, _graph);
 			AssetDatabase.SaveAssets();
 			_graph.nodes.Add(newNode);
-		}
-
-		private void OnDrag(Vector2 delta)
-		{
-			_drag = delta;
-
-			if (_graph.nodes != null)
-			{
-				foreach (var node in _graph.nodes)
-				{
-					node.Drag(delta);
-				}
-			}
-
-			GUI.changed = true;
-		}
-
-		private void OnClickRemoveNode(SDFNode node)
-		{
-			if (_graph.connections != null)
-			{
-				List<Connection> connectionsToRemove = new List<Connection>();
-
-				foreach (var connection in _graph.connections)
-				{
-					if (node.inPoints.Any(x => x.node == connection.inPoint.node) || node.outPoints.Any(x => x.node == connection.outPoint.node))
-					{
-						connectionsToRemove.Add(connection);
-					}
-				}
-
-				foreach (var conToRemove in connectionsToRemove)
-				{
-					_graph.connections.Remove(conToRemove);
-				}
-
-				connectionsToRemove = null;
-			}
-			_graph.nodes.Remove(node);
-			DestroyImmediate(node, true);
-			AssetDatabase.SaveAssets();
-		}
-
-		private void OnClickInPoint(ConnectionPoint inPoint)
-		{
-			_selectedInPoint = inPoint;
-
-			if (_selectedOutPoint != null)
-			{
-				if (_selectedOutPoint.node != _selectedInPoint.node)
-				{
-					CreateConnection();
-					ClearConnectionSelection();
-				}
-				else
-				{
-					ClearConnectionSelection();
-				}
-			}
-		}
-
-		private void OnClickOutPoint(ConnectionPoint outPoint)
-		{
-			_selectedOutPoint = outPoint;
-
-			if (_selectedInPoint != null)
-			{
-				if (_selectedOutPoint.node != _selectedInPoint.node)
-				{
-					CreateConnection();
-					ClearConnectionSelection();
-				}
-				else
-				{
-					ClearConnectionSelection();
-				}
-			}
-		}
-
-		private void OnClickRemoveConnection(Connection connection)
-		{
-			_graph.connections.Remove(connection);
 		}
 
 		private void CreateConnection()
@@ -366,6 +343,21 @@ namespace SDFEditor
 		{
 			_selectedInPoint = null;
 			_selectedOutPoint = null;
+		}
+
+		private void OnDrag(Vector2 delta)
+		{
+			_drag = delta;
+
+			if (_graph.nodes != null)
+			{
+				foreach (var node in _graph.nodes)
+				{
+					node.Drag(delta);
+				}
+			}
+
+			GUI.changed = true;
 		}
 
 		private void Save()
@@ -386,44 +378,6 @@ namespace SDFEditor
 
 			AssetDatabase.SaveAssets();
 			AssetDatabase.Refresh();
-		}
-
-		//private void Load()
-		//{
-		//	//TODO: Prompt user to save or discard if there are current changes?
-		//	Clear();
-
-		//	if (!_graph)
-		//	{
-		//		return;
-		//	}
-
-		//	foreach(var node in _graph.nodes)
-		//	{
-		//		var newNode = Instantiate(node);
-		//		newNode.Init(_nodeStyle, _selectedNodeStyle, _inPointStyle, _outPointStyle,
-		//			OnClickInPoint, OnClickOutPoint, OnClickRemoveNode);
-		//		_nodes.Add(newNode);
-		//	}
-
-		//	foreach (var connection in _graph.connections)
-		//	{
-		//		var inPoint = _nodes.First(n => n.inPoint.id == connection.inPoint.id).inPoint;
-		//		var outPoint = _nodes.First(n => n.outPoint.id == connection.outPoint.id).outPoint;
-		//		var newConnection = Instantiate(connection);
-		//		newConnection.Init(inPoint, outPoint, OnClickRemoveConnection);
-		//		_connections.Add(newConnection);
-		//	}
-		//}
-
-		//Check if we have any ciclic connections
-		private bool IsTree(ConnectionPoint newOut, ConnectionPoint newIn)
-		{
-			bool isTree = true;
-
-
-
-			return isTree;
 		}
 	}
 }

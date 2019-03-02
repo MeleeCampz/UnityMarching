@@ -7,13 +7,18 @@ namespace SDFEditor
 {
 	public class SDFNode_Output : SDFNode
 	{
+		public SDFNode_Output()
+		{
+			outPoints.Add(new ConnectionPoint(this, ConnectionPointType.In));
+			outPoints.Add(new ConnectionPoint(this, ConnectionPointType.In));
+			outPoints.Add(new ConnectionPoint(this, ConnectionPointType.In));
+			outPoints.Add(new ConnectionPoint(this, ConnectionPointType.In));
+		}
+
 		protected override void OnFinishedInit()
 		{
-			rect = new Rect(rect.x, rect.y, 120, 300);
-
-			inPoints.Add(new ConnectionPoint(this, ConnectionPointType.In, inPointStyle, OnClickInPoint));
-			outPoints.Add(new ConnectionPoint(this, ConnectionPointType.Out, outPointStyle, OnClickOutPoint));
-			outPoints.Add(new ConnectionPoint(this, ConnectionPointType.Out, outPointStyle, OnClickOutPoint));
+			title = "Output";
+			rect = new Rect(rect.x, rect.y, 80, 200);
 		}
 	}
 }

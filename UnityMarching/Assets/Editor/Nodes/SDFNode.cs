@@ -11,6 +11,9 @@ namespace SDFEditor
 	[Serializable]
 	public abstract class SDFNode : ScriptableObject
 	{
+		[NonSerialized]
+		public SDFEditorGraph graph;
+
 		public Rect rect;
 		public string title;
 
@@ -21,61 +24,55 @@ namespace SDFEditor
 		public List<ConnectionPoint> inPoints = new List<ConnectionPoint>();
 		public List<ConnectionPoint> outPoints = new List<ConnectionPoint>();
 
-
-		[NonSerialized] protected GUIStyle style;
-		[NonSerialized] protected GUIStyle defaultNodeStyle;
-		[NonSerialized] protected GUIStyle selectedNodeStyle;
-
-		[NonSerialized] protected GUIStyle inPointStyle;
-		[NonSerialized] protected GUIStyle outPointStyle;
-		protected Action<ConnectionPoint> OnClickInPoint;
-		protected Action<ConnectionPoint> OnClickOutPoint;
-
 		public Action<SDFNode> OnRemoveNode;
 
 		//Used for creating new Nodes
-		public void Init(Vector2 position, GUIStyle nodeStyle, GUIStyle selectedStyle,
-			GUIStyle inPointStyle, GUIStyle outPointStyle,
-			Action<ConnectionPoint> OnClickInPoint, Action<ConnectionPoint> OnClickOutPoint, Action<SDFNode> OnClickRemoveNode)
+		public void Init(Vector2 position)
 		{
 			rect = new Rect(position.x, position.y, 10, 10);
-			title = "renameMe!";
-
-			Init(nodeStyle, selectedStyle, inPointStyle, outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode);
+			Init();
 		}
 
 		//Used for loading nodes
-		public void Init(GUIStyle nodeStyle, GUIStyle selectedStyle,
-			GUIStyle inPointStyle, GUIStyle outPointStyle,
-			Action<ConnectionPoint> OnClickInPoint, Action<ConnectionPoint> OnClickOutPoint, Action<SDFNode> OnClickRemoveNode)
+		private void Init()
 		{
-			style = nodeStyle;
-			defaultNodeStyle = nodeStyle;
-			selectedNodeStyle = selectedStyle;
-
-			this.inPointStyle = inPointStyle;
-			this.outPointStyle = outPointStyle;
-
-			this.OnClickInPoint = OnClickInPoint;
-			this.OnClickOutPoint = OnClickOutPoint;
-
-			OnRemoveNode = OnClickRemoveNode;
-
 			OnFinishedInit();
 		}
 
 		//Use this to initialize content
 		protected abstract void OnFinishedInit();
 
+		//Called after graph asses was deserialized
+		public virtual void OnAfterDeserialize(SDFEditorGraph graph)
+		{
+			Init();
+
+			this.graph = graph;
+			foreach(var connectionPoint in inPoints)
+			{
+				connectionPoint.OnAfterDeserialize(this);
+			}
+			foreach (var connectionPoint in outPoints)
+			{
+				connectionPoint.OnAfterDeserialize(this);
+			}
+		}
 
 		public void Drag(Vector2 delta)
 		{
 			rect.position += delta;
 		}
 
-		public virtual void Draw()
+		public virtual void Draw(SDFEditor editor)
 		{
-			GUI.Box(rect, title, style);
+			GUI.Box(rect, "");
+
+			const int titelHeight = 20;
+
+			GUI.Box(new Rect(rect.x, rect.y, rect.width, titelHeight),title);
+
+			Rect contentRect = rect;
+			contentRect.height -= titelHeight;
 
 			Rect inRect = rect;
 			inRect.width = 20;
@@ -86,17 +83,17 @@ namespace SDFEditor
 			int i = 0;
 			foreach (var point in inPoints)
 			{
-				point.Draw(i++);
+				point.Draw(i++, contentRect, editor);
 			}
 
 			int j = 0;
 			foreach (var point in outPoints)
 			{
-				point.Draw(j++);
+				point.Draw(j++, contentRect, editor);
 			}
 		}
 
-		public bool ProcessEvents(Event e)
+		public bool ProcessEvents(Event e, SDFEditor editor)
 		{
 			switch (e.type)
 			{
@@ -108,18 +105,16 @@ namespace SDFEditor
 							IsDragged = true;
 							GUI.changed = true;
 							IsSelected = true;
-							style = selectedNodeStyle;
 						}
 						else
 						{
 							GUI.changed = true;
-							IsSelected = true;
-							style = defaultNodeStyle;
+							IsSelected = false;
 						}
 					}
 					else if (e.button == 1 && IsSelected && rect.Contains(e.mousePosition))
 					{
-						ProcessContextMenu();
+						ProcessContextMenu(editor);
 						e.Use();
 					}
 					break;
@@ -141,16 +136,21 @@ namespace SDFEditor
 			return false;
 		}
 
-		private void ProcessContextMenu()
+		private void ProcessContextMenu(SDFEditor editor)
 		{
 			GenericMenu genericMenu = new GenericMenu();
-			genericMenu.AddItem(new GUIContent("Remove node"), false, OnClickRemoveNode);
+			genericMenu.AddItem(new GUIContent("Remove node"), false, ()=>OnClickRemoveNode(editor));
+			AddOptionsToContextMenu(genericMenu);
 			genericMenu.ShowAsContext();
 		}
 
-		private void OnClickRemoveNode()
+		//override this to add custom Context menu options
+		protected virtual void AddOptionsToContextMenu(GenericMenu menu) { }
+
+		private void OnClickRemoveNode(SDFEditor editor)
 		{
 			OnRemoveNode?.Invoke(this);
+			editor.OnClickRemoveNode(this);
 		}
 	}
 }

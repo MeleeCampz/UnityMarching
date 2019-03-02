@@ -9,46 +9,60 @@ namespace SDFEditor
 	public class ConnectionPoint
 	{
 		public string id;
+		public ConnectionPointType type;
 
 		[NonSerialized]public Rect rect;
-		[NonSerialized] public ConnectionPointType type;
-
 		[NonSerialized] public SDFNode node;
-		[NonSerialized] public GUIStyle style;
 
 		public Action<ConnectionPoint> OnClickConnectionPoint;
 
-		public ConnectionPoint(SDFNode node, ConnectionPointType type, GUIStyle style,
-			Action<ConnectionPoint> OnClickConnectionPoint, string id = null)
+		public ConnectionPoint(SDFNode node, ConnectionPointType type)
 		{
 			this.node = node;
 			this.type = type;
-			this.style = style;
-			this.OnClickConnectionPoint = OnClickConnectionPoint;
-			rect = new Rect(0, 0, 10f, 20f);
-
-			this.id = id ?? Guid.NewGuid().ToString();
+			
+			id = Guid.NewGuid().ToString();
+			Init();
 		}
 
-		public void Draw(int index)
+		public virtual void OnAfterDeserialize(SDFNode node)
 		{
-			rect.y = node.rect.y + (node.rect.height * 0.5f) - rect.height * 0.5f + rect.height * index;
+			this.node = node;
+			Init();
+		}
+
+		public void Draw(int index, Rect contentRect, SDFEditor editor)
+		{
+			rect.y = contentRect.y + (contentRect.height * 0.5f) - rect.height * 0.5f + rect.height * index;
 
 			switch (type)
 			{
 				case ConnectionPointType.In:
-					rect.x = node.rect.x - rect.width + 8f;
+					rect.x = contentRect.x - rect.width + 8f;
 					break;
 
 				case ConnectionPointType.Out:
-					rect.x = node.rect.x + node.rect.width - 8f;
+					rect.x = contentRect.x + contentRect.width - 8f;
 					break;
 			}
 
-			if (GUI.Button(rect, "", style))
+			if (GUI.Button(rect, ""))
 			{
 				OnClickConnectionPoint?.Invoke(this);
+				if(type == ConnectionPointType.In)
+				{
+					editor.OnClickInPoint(this);
+				}
+				else
+				{
+					editor.OnClickOutPoint(this);
+				}
 			}
+		}
+
+		private void Init()
+		{
+			rect = new Rect(0, 0, 10f, 20f);
 		}
 	}
 }

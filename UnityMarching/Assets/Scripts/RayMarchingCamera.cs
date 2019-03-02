@@ -39,6 +39,9 @@ public class RayMarchingCamera : SceneViewFilter
 	public Vector4 sphere2;
 	public float sphereIntersectSmooth;
 
+	[Header("Noise")]
+	public Texture noiseText;
+
 	public Material RaymarchMaterial
 	{
 		get
@@ -105,6 +108,8 @@ public class RayMarchingCamera : SceneViewFilter
 
 		RenderTexture.active = destination;
 		_raymatchMat.SetTexture("_MainTex", source);
+
+		_raymatchMat.SetTexture("_NoiseTex", noiseText);
 
 		GL.PushMatrix();
 		GL.LoadOrtho();

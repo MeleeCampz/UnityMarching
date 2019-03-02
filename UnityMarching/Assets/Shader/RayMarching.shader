@@ -3,6 +3,7 @@
 	Properties
 	{
 		_MainTex("Texture", 2D) = "white" {}
+		_NoiseTex("Noise", 2D) = "white" {}
 	}
 		SubShader
 	{
@@ -18,11 +19,12 @@
 
 			#include "UnityCG.cginc"
 			#include "DistanceFunctions.cginc"
-			
+
 			//#include "SimplexNoise3D.hlsl"
 			#include "SimplexNoise2D.hlsl"
 
 			sampler2D _MainTex;
+			sampler2D _NoiseTex;
 			uniform sampler2D _CameraDepthTexture;
 			uniform float4x4 _CamFrustum, _CamToWorld;
 			uniform int _MaxIterations;
@@ -32,7 +34,7 @@
 			uniform float3 _LightDir, _LightCol;
 			uniform float _LightIntensity;
 			uniform fixed4 _MainColor;
-			
+
 			uniform float _Repetation;
 
 			//Shadow
@@ -75,7 +77,7 @@
 			}
 
 			float BoxSphere(float3 p)
-			{				
+			{
 				float sphere1 = sdSphere(p - _Sphere1.xyz, _Sphere1.w);
 				float box1 = sdRoundBox(p - _Box1.xyz, _Box1.www, _Box1Round);
 				float combine1 = opSS(sphere1, box1, _BoxSphereSmooth);
@@ -87,7 +89,25 @@
 
 			float SimplexNoise2D(float3 p, float2 s, float h)
 			{
-				return p.y + snoise(p.xz * s) * h;
+				//float2 uv = float2(p.x, p.z) * s;
+				float4 uv = float4(p.x + p.y, p.z + p.y, 0, 0);
+				//float4 uv = float4(p.x + p.y, p.z + p.y,frac(p.x),frac(p.y));
+				uv *= s.xyxy;
+
+				float textInterp = 0;
+				int range = 0;
+				for (int x = -range; x <= range; x++)
+				{
+					for (int y = -range; y <= range; y++)
+					{
+						textInterp += tex2Dlod(_NoiseTex, uv + float4(x, y, 0, 0) * 1).r;
+					}
+				}
+
+				textInterp /= pow(range*2 + 1.0, 2);
+
+				return p.y - textInterp * h;
+				//return p.y + snoise(p.xz * s) * h;
 			}
 
 
@@ -97,14 +117,18 @@
 			//}
 
 			float distanceField(float3 p)
-			{				
-				float n1 = SimplexNoise2D(p, float2(1, 1)*0.015, 50.5);
-				float n2 = SimplexNoise2D(p, float2(1, 1)*0.1, 1.5);
-				
+			{
+				float n1 = SimplexNoise2D(p, float2(1, 1)*0.001, 100);
+				float n2 = 0;// SimplexNoise2D(p, float2(1, 1)*.01, 1.5);
+
 				float nc = n1 + n2;//opU(opSS(n2, n1, _SphereIntersectionSmooth), p.y, 0.1);
 
+				nc = length(p);
+
+				//return nc;
+
 				float ground = sdPlane(p, float4(0, 1, 0, 0));
-				
+
 				if (_Repetation > 0)
 				{
 					opRep(p, _Repetation);
@@ -130,7 +154,7 @@
 			{
 				for (float t = mint; t < maxt;)
 				{
-					float h = distanceField(ro + rd*t);
+					float h = distanceField(ro + rd * t);
 					if (h < 0.001)
 					{
 						return 0.0;

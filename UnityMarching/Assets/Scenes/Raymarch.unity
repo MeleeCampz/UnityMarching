@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 0}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -239,7 +239,7 @@ Light:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 1
+    m_Strength: 0.948
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 0.2
@@ -339,35 +339,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611851, guid: ea9e9a53e7ff92044ab808451a4154a8,
+    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
         type: 3}
-      propertyPath: field of view
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611851, guid: ea9e9a53e7ff92044ab808451a4154a8,
-        type: 3}
-      propertyPath: m_AllowMSAA
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611851, guid: ea9e9a53e7ff92044ab808451a4154a8,
-        type: 3}
-      propertyPath: m_HDR
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611851, guid: ea9e9a53e7ff92044ab808451a4154a8,
-        type: 3}
-      propertyPath: m_OcclusionCulling
+      propertyPath: mainColor.a
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611851, guid: ea9e9a53e7ff92044ab808451a4154a8,
+    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
         type: 3}
-      propertyPath: m_AllowDynamicResolution
+      propertyPath: mainColor.r
+      value: 0.5371175
+      objectReference: {fileID: 0}
+    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
+        type: 3}
+      propertyPath: mainColor.g
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611851, guid: ea9e9a53e7ff92044ab808451a4154a8,
+    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
         type: 3}
-      propertyPath: near clip plane
-      value: 0.01
+      propertyPath: mainColor.b
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
         type: 3}
@@ -376,113 +366,73 @@ PrefabInstance:
       objectReference: {fileID: 431518461}
     - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
         type: 3}
+      propertyPath: aoStepSize
+      value: 0.68
+      objectReference: {fileID: 0}
+    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
+        type: 3}
+      propertyPath: aoIntensity
+      value: 0.131
+      objectReference: {fileID: 0}
+    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
+        type: 3}
+      propertyPath: shadowDistance.x
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
+        type: 3}
+      propertyPath: shadowDistance.y
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
+        type: 3}
+      propertyPath: sphere1.w
+      value: 2.67
+      objectReference: {fileID: 0}
+    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
+        type: 3}
+      propertyPath: boxSphereSmooth
+      value: 1.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
+        type: 3}
+      propertyPath: box1Round
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
+        type: 3}
+      propertyPath: accuracy
+      value: 0.068
+      objectReference: {fileID: 0}
+    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
+        type: 3}
+      propertyPath: maxIterations
+      value: 450
+      objectReference: {fileID: 0}
+    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
+        type: 3}
+      propertyPath: sphereIntersectSmooth
+      value: 0.38
+      objectReference: {fileID: 0}
+    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
+        type: 3}
+      propertyPath: maxDistance
+      value: 5000
+      objectReference: {fileID: 0}
+    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
+        type: 3}
+      propertyPath: repetation
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
+        type: 3}
       propertyPath: aoIterations
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
         type: 3}
-      propertyPath: aoIntensity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
-        type: 3}
-      propertyPath: accuracy
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
-        type: 3}
-      propertyPath: maxIterations
-      value: 530
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
-        type: 3}
-      propertyPath: aoStepSize
-      value: 0.65
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
-        type: 3}
-      propertyPath: mainColor.r
-      value: 0.7424606
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
-        type: 3}
-      propertyPath: mainColor.g
-      value: 0.972549
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
-        type: 3}
-      propertyPath: mainColor.b
-      value: 0.654902
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
-        type: 3}
-      propertyPath: shadowPenumbra
-      value: 14
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
-        type: 3}
-      propertyPath: maxDistance
-      value: 500
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
-        type: 3}
-      propertyPath: sphere1.w
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
-        type: 3}
-      propertyPath: box1.w
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
-        type: 3}
-      propertyPath: sphere2.w
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
-        type: 3}
-      propertyPath: repetation
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
-        type: 3}
-      propertyPath: sphereIntersectSmooth
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
-        type: 3}
-      propertyPath: boxSphereSmooth
-      value: 2.17
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
-        type: 3}
-      propertyPath: box1Round
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
-        type: 3}
-      propertyPath: sphere1.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
-        type: 3}
-      propertyPath: box1.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
-        type: 3}
-      propertyPath: sphere2.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
-        type: 3}
-      propertyPath: shadowDistance.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
-        type: 3}
-      propertyPath: shadowDistance.y
-      value: 100
-      objectReference: {fileID: 0}
+      propertyPath: noiseText
+      value: 
+      objectReference: {fileID: 2800000, guid: af4286280812e564594ff40dec64e4cb, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea9e9a53e7ff92044ab808451a4154a8, type: 3}
