@@ -197,8 +197,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 186299565}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 33.39, y: 0, z: 0}
+  m_LocalScale: {x: 100, y: 100, z: 100}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -231,7 +231,7 @@ Light:
   serializedVersion: 8
   m_Type: 1
   m_Color: {r: 1, g: 0, b: 0, a: 1}
-  m_Intensity: 0.56
+  m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
@@ -239,7 +239,7 @@ Light:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 0.948
+    m_Strength: 0.704
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 0.2
@@ -265,13 +265,33 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 431518460}
-  m_LocalRotation: {x: -0.01873491, y: -0.6186712, z: 0.56910664, w: -0.5413065}
-  m_LocalPosition: {x: 3.15, y: 5.51, z: -3.03}
+  m_LocalRotation: {x: 0.4582973, y: 0.33846208, z: -0.69232315, w: 0.44282708}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 46.424004, y: -289.826, z: -59.338}
+  m_LocalEulerAnglesHint: {x: 119.009, y: 136.336, z: 38.656998}
+--- !u!1 &536187056 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9098077372145611849, guid: ea9e9a53e7ff92044ab808451a4154a8,
+    type: 3}
+  m_PrefabInstance: {fileID: 9098077373474740957}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &536187057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 536187056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80e2a07a3317b8344944820af52280bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lookSensitivity: 25
+  moveSensitivity: 100
 --- !u!1001 &9098077373474740957
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -367,72 +387,107 @@ PrefabInstance:
     - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
         type: 3}
       propertyPath: aoStepSize
-      value: 0.68
+      value: 7.01
       objectReference: {fileID: 0}
     - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
         type: 3}
       propertyPath: aoIntensity
-      value: 0.131
+      value: 0.359
       objectReference: {fileID: 0}
     - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
         type: 3}
       propertyPath: shadowDistance.x
-      value: 0.1
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
         type: 3}
       propertyPath: shadowDistance.y
-      value: 50
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
         type: 3}
       propertyPath: sphere1.w
-      value: 2.67
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
         type: 3}
       propertyPath: boxSphereSmooth
-      value: 1.72
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
         type: 3}
       propertyPath: box1Round
-      value: 0.25
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
         type: 3}
       propertyPath: accuracy
-      value: 0.068
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
         type: 3}
       propertyPath: maxIterations
-      value: 450
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
         type: 3}
       propertyPath: sphereIntersectSmooth
-      value: 0.38
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
-        type: 3}
-      propertyPath: maxDistance
-      value: 5000
-      objectReference: {fileID: 0}
-    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
-        type: 3}
-      propertyPath: repetation
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
         type: 3}
+      propertyPath: maxDistance
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
+        type: 3}
+      propertyPath: repetation
+      value: 250
+      objectReference: {fileID: 0}
+    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
+        type: 3}
       propertyPath: aoIterations
-      value: 10
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
         type: 3}
       propertyPath: noiseText
       value: 
       objectReference: {fileID: 2800000, guid: af4286280812e564594ff40dec64e4cb, type: 3}
+    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
+        type: 3}
+      propertyPath: sphere1.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
+        type: 3}
+      propertyPath: box1.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
+        type: 3}
+      propertyPath: sphere2.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
+        type: 3}
+      propertyPath: box1.w
+      value: 7.31
+      objectReference: {fileID: 0}
+    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
+        type: 3}
+      propertyPath: sphere2.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9098077372145611845, guid: ea9e9a53e7ff92044ab808451a4154a8,
+        type: 3}
+      propertyPath: shadowPenumbra
+      value: 23.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 9098077372145611851, guid: ea9e9a53e7ff92044ab808451a4154a8,
+        type: 3}
+      propertyPath: far clip plane
+      value: 10000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea9e9a53e7ff92044ab808451a4154a8, type: 3}

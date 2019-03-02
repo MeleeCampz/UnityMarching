@@ -78,65 +78,69 @@
 
 			float BoxSphere(float3 p)
 			{
-				float sphere1 = sdSphere(p - _Sphere1.xyz, _Sphere1.w);
-				float box1 = sdRoundBox(p - _Box1.xyz, _Box1.www, _Box1Round);
+				float sphere1 = sdSphere(p, _Sphere1.w);
+				float box1 = sdRoundBox(p, _Box1.www, _Box1Round);
+				//float combine1 = opS(sphere1, box1);
 				float combine1 = opSS(sphere1, box1, _BoxSphereSmooth);
-				float sphere2 = sdSphere(p - _Sphere2.xyz, _Sphere2.w);
-				float combine2 = opIS(sphere2, combine1, _SphereIntersectionSmooth);
+				//float sphere2 = sdSphere(p - _Sphere2.xyz, _Sphere2.w);
+				//float combine2 = opIS(sphere2, combine1, _SphereIntersectionSmooth);
 
-				return combine2;
+				return combine1;
 			}
 
 			float SimplexNoise2D(float3 p, float2 s, float h)
 			{
-				//float2 uv = float2(p.x, p.z) * s;
 				float4 uv = float4(p.x + p.y, p.z + p.y, 0, 0);
-				//float4 uv = float4(p.x + p.y, p.z + p.y,frac(p.x),frac(p.y));
 				uv *= s.xyxy;
+				return p.y - tex2Dlod(_NoiseTex, uv + float4(1, 1, 0, 0) * 1).r * h;
+			}
 
-				float textInterp = 0;
-				int range = 0;
-				for (int x = -range; x <= range; x++)
-				{
-					for (int y = -range; y <= range; y++)
-					{
-						textInterp += tex2Dlod(_NoiseTex, uv + float4(x, y, 0, 0) * 1).r;
-					}
-				}
-
-				textInterp /= pow(range*2 + 1.0, 2);
-
-				return p.y - textInterp * h;
-				//return p.y + snoise(p.xz * s) * h;
+			float rand_1_05(in float2 uv)
+			{
+				float2 noise = (frac(sin(dot(uv, float2(12.9898, 78.233)*2.0)) * 43758.5453));
+				return abs(noise.x + noise.y) * 0.5;
 			}
 
 
-			//float SimplexNoise3D(float3 p)
-			//{
-			//	return length(snoise(p));
-			//}
-
-			float distanceField(float3 p)
+			float distanceField(float3 p, inout float3 inOutMat)
 			{
-				float n1 = SimplexNoise2D(p, float2(1, 1)*0.001, 100);
-				float n2 = 0;// SimplexNoise2D(p, float2(1, 1)*.01, 1.5);
-
-				float nc = n1 + n2;//opU(opSS(n2, n1, _SphereIntersectionSmooth), p.y, 0.1);
-
-				nc = length(p);
+				//float n1 = SimplexNoise2D(p, float2(1, 1)*0.001, 100);
+				//nc = length(p);
 
 				//return nc;
 
-				float ground = sdPlane(p, float4(0, 1, 0, 0));
+				float3 gn = float3(0.75, 1, 0.12);
+				float ground1 = sdPlane(p, normalize(float4(gn, 0)));
+				float ground = ground1;
+
+				p += _SinTime * 120.0;
+
+				inOutMat = float3(1, 1, 1);
 
 				if (_Repetation > 0)
 				{
-					opRep(p, _Repetation);
+					inOutMat = pMod3(p, _Repetation);// *(_SinTime.xyz * 0.5 + float3(1, 1, 1) * 1.5));
+					float random1 = rand_1_05(inOutMat.xy);
+					float random2 = rand_1_05(inOutMat.zy);
+					float random3 = rand_1_05(inOutMat.xz);
+					inOutMat = float3(random1, random2, random3);
 				}
 
-				float boxSphere1 = BoxSphere(p + float3(0,-0,0));
+				float boxSphere1 = BoxSphere(p);
 
-				return opUS(opU(ground, boxSphere1), nc, 5);
+				float blend = 0;
+				float geo = opUS(ground, boxSphere1,100, blend);
+
+				float3 floorColor = float3(1, 0, 0);
+				inOutMat = lerp(inOutMat, floorColor, blend);
+
+				return geo;
+			}
+
+			float distanceField(float3 p)
+			{
+				float3 dummy = float3(0, 0, 0);
+				return distanceField(p, dummy);
 			}
 
 			float3 getNormal(float3 p)
@@ -167,8 +171,9 @@
 
 			float softShadow(float3 ro, float3 rd, float mint, float maxt, float k)
 			{
+				int step = 0;
 				float result = 1.0;
-				for (float t = mint; t < maxt;)
+				for (float t = mint; t < maxt && step < 50; step++)
 				{
 					float h = distanceField(ro + rd * t);
 					if (h < 0.001)
@@ -208,7 +213,7 @@
 				//Ambient Occlusion
 				float ao = AmbientOcclusion(p, n);
 
-				result = color * light * shadow * ao;
+				result = light * shadow * ao;
 
 				return result;
 			}
@@ -230,14 +235,15 @@
 
 					float3 p = ro + rd * t;
 					//Check hit in SDF
-					float d = distanceField(p);
+					float3 mat = float3(1,1,1);
+					float d = distanceField(p, mat);
 					if (d < _Accuracy)
 					{
 						//shading!
 						float3 n = getNormal(p);
 						float3 s = shading(p, n);
 
-						result = fixed4(_MainColor.rgb * s,1);
+						result = fixed4(_MainColor.rgb * s * mat,1);
 						break;
 					}
 
