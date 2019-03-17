@@ -10,17 +10,17 @@ namespace SDFEditor
 		public string inId;
 		public string outid;
 
-		[NonSerialized]public ConnectionPoint inPoint;
-		[NonSerialized] public ConnectionPoint outPoint;
+		[NonSerialized]public IConnectionPoint inPoint;
+		[NonSerialized] public IConnectionPoint outPoint;
 		public Action<Connection> OnClickRemoveConnection;
 
 		//Used when constructing a new connection
-		public Connection(ConnectionPoint inPoint, ConnectionPoint outPoint)
+		public Connection(IConnectionPoint inPoint, IConnectionPoint outPoint)
 		{
 			this.inPoint = inPoint;
 			this.outPoint = outPoint;
-			inId = inPoint.id;
-			outid = outPoint.id;
+			inId = inPoint.GetID();
+			outid = outPoint.GetID();
 		}
 
 		public virtual void OnAfterDeserialize(SDFEditorGraph graph)
@@ -31,17 +31,20 @@ namespace SDFEditor
 
 		public void Draw(SDFEditor editor)
 		{
+			Rect outRect = outPoint.GetRect();
+			Rect inRect = inPoint.GetRect();
+
 			Handles.DrawBezier(
-				inPoint.rect.center,
-				outPoint.rect.center,
-				inPoint.rect.center + Vector2.left * 50f,
-				outPoint.rect.center - Vector2.left * 50f,
+				outRect.center,
+				inRect.center,
+				outRect.center + Vector2.left * 50f,
+				inRect.center - Vector2.left * 50f,
 				Color.white,
 				null,
 				2f
 			);
 
-			if (Handles.Button((inPoint.rect.center + outPoint.rect.center) * 0.5f,
+			if (Handles.Button((inRect.center + outRect.center) * 0.5f,
 					Quaternion.identity,4, 8, Handles.RectangleHandleCap))
 			{
 				OnClickRemoveConnection?.Invoke(this);

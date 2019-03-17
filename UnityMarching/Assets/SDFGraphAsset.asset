@@ -13,26 +13,10 @@ MonoBehaviour:
   m_Name: SDFGraphAsset
   m_EditorClassIdentifier: 
   nodes:
-  - {fileID: 114923712459934758}
-  - {fileID: 114181591203296116}
-  - {fileID: 114949926182882336}
-  - {fileID: 114085915969624594}
-  connections:
-  - inId: 9ab52c78-3847-4c20-84e6-855c1229db54
-    outid: 2fbc3fad-24cb-43dc-a91b-e18db181714e
-  - inId: c978eba5-d943-44b3-8e41-a4664fc2cfe7
-    outid: 1590b983-0b25-49e6-80da-99be87d66a04
-  - inId: eebdd84c-e222-4828-b966-ece8f76881ee
-    outid: f54aa909-1adb-4cf6-95f7-7d8d8950db46
-  - inId: a8b2211c-68c6-4f62-a971-25748f51e54d
-    outid: 7a8dc412-e9cb-4766-bb5c-9f1d43a92bba
-  - inId: 5bf4f4f8-e5a4-4a48-ae9a-3c8cac33e89e
-    outid: cf58e269-8670-48a3-be1e-b18f24a373cd
-  - inId: 4689103c-515c-44eb-ba9d-1f9961c0e528
-    outid: f54aa909-1adb-4cf6-95f7-7d8d8950db46
-  - inId: 95f5d50a-fa86-49fa-81c9-9ca7b100f48d
-    outid: 4497d4d5-d893-4250-bf8a-6f2449b629f5
---- !u!114 &114085915969624594
+  - {fileID: 114884740239424580}
+  - {fileID: 114427959786182108}
+  connections: []
+--- !u!114 &114109545158433368
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,33 +25,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a51c43adf49607419340824d8858d3c, type: 3}
+  m_Script: {fileID: 11500000, guid: d44708604025e6c429f3da5674cbb1b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rect:
     serializedVersion: 2
-    x: 751
-    y: 295
+    x: 364
+    y: 329
     width: 80
-    height: 200
-  titleRect:
-    serializedVersion: 2
-    x: 751
-    y: 295
-    width: 80
-    height: 20
-  title: Output Node
-  inPoints: []
-  outPoints:
-  - id: a8b2211c-68c6-4f62-a971-25748f51e54d
-    type: 0
-  - id: 5bf4f4f8-e5a4-4a48-ae9a-3c8cac33e89e
-    type: 0
-  - id: 4689103c-515c-44eb-ba9d-1f9961c0e528
-    type: 0
-  - id: 95f5d50a-fa86-49fa-81c9-9ca7b100f48d
-    type: 0
---- !u!114 &114181591203296116
+    height: 50
+  Value: 0
+--- !u!114 &114122170603203452
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -76,35 +44,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9566883326e17f74c9e7a3fcade94910, type: 3}
+  m_Script: {fileID: 11500000, guid: 63f691945836e00459af9bba20cec46b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rect:
-    serializedVersion: 2
-    x: 310
-    y: 128
-    width: 80
-    height: 200
-  titleRect:
-    serializedVersion: 2
-    x: 310
-    y: 128
-    width: 80
-    height: 20
-  title: Example
-  inPoints:
-  - id: 019344e1-d05c-4e52-bb0e-5af0561b5d9e
-    type: 0
-  - id: d0dc57f2-4b4a-42ba-b90f-10c5fad671b0
-    type: 0
-  - id: 56081f34-ad3f-4df6-ab5c-ee4732005c3f
-    type: 0
-  outPoints:
-  - id: 2fbc3fad-24cb-43dc-a91b-e18db181714e
-    type: 1
-  - id: 1590b983-0b25-49e6-80da-99be87d66a04
-    type: 1
---- !u!114 &114923712459934758
+  id: 88c50917-0076-46bb-a1b1-39c57bcf039f
+  type: 0
+--- !u!114 &114255504287811106
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -113,35 +58,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9566883326e17f74c9e7a3fcade94910, type: 3}
+  m_Script: {fileID: 11500000, guid: 63f691945836e00459af9bba20cec46b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rect:
-    serializedVersion: 2
-    x: 304
-    y: 337
-    width: 80
-    height: 200
-  titleRect:
-    serializedVersion: 2
-    x: 304
-    y: 337
-    width: 80
-    height: 20
-  title: Example
-  inPoints:
-  - id: 2dec91e3-19c1-417b-b466-9959f7bc99dc
-    type: 0
-  - id: 69375d7c-583d-4d35-8061-9c7cd3e8c935
-    type: 0
-  - id: f382b814-c25e-4c48-93fd-4627aedd8e7b
-    type: 0
-  outPoints:
-  - id: f54aa909-1adb-4cf6-95f7-7d8d8950db46
-    type: 1
-  - id: 4497d4d5-d893-4250-bf8a-6f2449b629f5
-    type: 1
---- !u!114 &114949926182882336
+  id: 7368abce-9a3d-4f5b-8430-058e3dc4410f
+  type: 1
+--- !u!114 &114263819950837150
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -150,31 +72,73 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9566883326e17f74c9e7a3fcade94910, type: 3}
+  m_Script: {fileID: 11500000, guid: 63f691945836e00459af9bba20cec46b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: aa837172-d6ba-464e-b9b7-b2df6abf30ae
+  type: 1
+--- !u!114 &114300490539689040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63f691945836e00459af9bba20cec46b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 77bd5522-f060-4aac-9702-673c1e712a2f
+  type: 0
+--- !u!114 &114427959786182108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d44708604025e6c429f3da5674cbb1b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rect:
     serializedVersion: 2
-    x: 482
-    y: 205
+    x: 255
+    y: 154
     width: 80
-    height: 200
-  titleRect:
+    height: 50
+  Value: 0
+--- !u!114 &114736200948447950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63f691945836e00459af9bba20cec46b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 13a6f3c8-77db-4bc3-b281-4453ae94a49e
+  type: 1
+--- !u!114 &114884740239424580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15fe0c7aa4f16884aa3d68c010f09dd4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rect:
     serializedVersion: 2
-    x: 482
-    y: 205
+    x: 706
+    y: 151
     width: 80
-    height: 20
-  title: Example
-  inPoints:
-  - id: 9ab52c78-3847-4c20-84e6-855c1229db54
-    type: 0
-  - id: c978eba5-d943-44b3-8e41-a4664fc2cfe7
-    type: 0
-  - id: eebdd84c-e222-4828-b966-ece8f76881ee
-    type: 0
-  outPoints:
-  - id: 7a8dc412-e9cb-4766-bb5c-9f1d43a92bba
-    type: 1
-  - id: cf58e269-8670-48a3-be1e-b18f24a373cd
-    type: 1
+    height: 120

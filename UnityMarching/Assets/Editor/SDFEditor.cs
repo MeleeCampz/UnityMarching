@@ -11,13 +11,13 @@ namespace SDFEditor
 
 	public class SDFEditor : EditorWindow
 	{
-		public GUIStyle NodeStyle { get; private set; }
-		public GUIStyle SelectedNodeStyle { get; private set; }
-		public GUIStyle InPointStyle { get; private set; }
-		public GUIStyle OutPointStyle { get; private set; }
+		public static GUIStyle NodeStyle { get; private set; }
+		public static GUIStyle SelectedNodeStyle { get; private set; }
+		public static GUIStyle InPointStyle { get; private set; }
+		public static GUIStyle OutPointStyle { get; private set; }
 
-		private ConnectionPoint _selectedInPoint;
-		private ConnectionPoint _selectedOutPoint;
+		private IConnectionPoint _selectedInPoint;
+		private IConnectionPoint _selectedOutPoint;
 
 		private Vector2 _offset;
 		private Vector2 _drag;
@@ -89,7 +89,8 @@ namespace SDFEditor
 
 				foreach (var connection in _graph.connections)
 				{
-					if (node.inPoints.Any(x => x.node == connection.outPoint.node) || node.outPoints.Any(x => x.node == connection.inPoint.node))
+					if (node.inPoints.Any(x => x.GetNode() == connection.outPoint.GetNode()) 
+						|| node.outPoints.Any(x => x.GetNode() == connection.inPoint.GetNode()))
 					{
 						connectionsToRemove.Add(connection);
 					}
@@ -107,13 +108,13 @@ namespace SDFEditor
 			AssetDatabase.SaveAssets();
 		}
 
-		public void OnClickInPoint(ConnectionPoint inPoint)
+		public void OnClickInPoint(IConnectionPoint inPoint)
 		{
 			_selectedInPoint = inPoint;
 
 			if (_selectedOutPoint != null)
 			{
-				if (_selectedOutPoint.node != _selectedInPoint.node)
+				if (_selectedOutPoint.GetNode() != _selectedInPoint.GetNode())
 				{
 					CreateConnection();
 					ClearConnectionSelection();
@@ -125,14 +126,14 @@ namespace SDFEditor
 			}
 		}
 
-		public void OnClickOutPoint(ConnectionPoint outPoint)
+		public void OnClickOutPoint(IConnectionPoint outPoint)
 
 		{
 			_selectedOutPoint = outPoint;
 
 			if (_selectedInPoint != null)
 			{
-				if (_selectedOutPoint.node != _selectedInPoint.node)
+				if (_selectedOutPoint.GetNode() != _selectedInPoint.GetNode())
 				{
 					CreateConnection();
 					ClearConnectionSelection();
@@ -210,9 +211,9 @@ namespace SDFEditor
 			if (_selectedInPoint != null && _selectedOutPoint == null)
 			{
 				Handles.DrawBezier(
-					_selectedInPoint.rect.center,
+					_selectedInPoint.GetRect().center,
 					e.mousePosition,
-					_selectedInPoint.rect.center + Vector2.left * 50f,
+					_selectedInPoint.GetRect().center + Vector2.left * 50f,
 					e.mousePosition - Vector2.left * 50f,
 					Color.white,
 					null,
@@ -225,9 +226,9 @@ namespace SDFEditor
 			if (_selectedOutPoint != null && _selectedInPoint == null)
 			{
 				Handles.DrawBezier(
-					_selectedOutPoint.rect.center,
+					_selectedOutPoint.GetRect().center,
 					e.mousePosition,
-					_selectedOutPoint.rect.center - Vector2.left * 50f,
+					_selectedOutPoint.GetRect().center - Vector2.left * 50f,
 					e.mousePosition + Vector2.left * 50f,
 					Color.white,
 					null,
@@ -310,10 +311,12 @@ namespace SDFEditor
 			GenericMenu genericMenu = new GenericMenu();
 			genericMenu.AddItem(new GUIContent("Add example node"), false, () => OnClickAddNode<SDFNode_Example>(mousePosition));
 			genericMenu.AddItem(new GUIContent("Add output node"), false, () => OnClickAddNode<SDFNode_Output>(mousePosition));
+			genericMenu.AddItem(new GUIContent("Add + node"), false, () => OnClickAddNode<SDFNode_Add>(mousePosition));
+			genericMenu.AddItem(new GUIContent("Add int node"), false, () => OnClickAddNode<SDFNode_IntField>(mousePosition));
 			genericMenu.ShowAsContext();
 		}
 
-		public void OnClickAddNode<T>(Vector2 mousePosition) where T : SDFNode, new()
+		public void OnClickAddNode<T>(Vector2 mousePosition) where T : SDFNode
 		{
 			if (_graph.nodes == null)
 			{
@@ -321,7 +324,7 @@ namespace SDFEditor
 			}
 
 			SDFNode newNode = CreateInstance<T>();
-			newNode.Init(mousePosition);
+			newNode.Setup(mousePosition, _graph);
 
 			AssetDatabase.AddObjectToAsset(newNode, _graph);
 			AssetDatabase.SaveAssets();
@@ -335,7 +338,8 @@ namespace SDFEditor
 				_graph.connections = new List<Connection>();
 			}
 
-			Connection connection = new Connection(_selectedInPoint, _selectedOutPoint);
+			//Output not is always start of connection Node->OutPoint->Inpoint->Node
+			Connection connection = new Connection(_selectedOutPoint, _selectedInPoint);
 			_graph.connections.Add(connection);
 		}
 

@@ -6,13 +6,11 @@ namespace SDFEditor
 {
 	public class SDFNode_Example : SDFNode
 	{
-		public SDFNode_Example()
+		public override void Setup(Vector2 position, SDFEditorGraph graph)
 		{
-			inPoints.Add(new ConnectionPoint(this, ConnectionPointType.In));
-			inPoints.Add(new ConnectionPoint(this, ConnectionPointType.In));
-			inPoints.Add(new ConnectionPoint(this, ConnectionPointType.In));
-			outPoints.Add(new ConnectionPoint(this, ConnectionPointType.Out));
-			outPoints.Add(new ConnectionPoint(this, ConnectionPointType.Out));
+			base.Setup(position, graph);
+			AddConnectionPoint<ConnectionPoint_Int, int>(ConnectionPointType.In);
+			AddConnectionPoint<ConnectionPoint_Int, int>(ConnectionPointType.Out);
 		}
 
 

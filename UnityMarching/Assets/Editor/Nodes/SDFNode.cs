@@ -6,31 +6,35 @@ using UnityEngine;
 
 namespace SDFEditor
 {
-	//Making the base class a scriptable object has quite some overhead in terms of overhead.
+	//Making the base class a scriptable object has quite some overhead.
 	//The upside is that we can serialze derived classes properly
 	[Serializable]
 	public abstract class SDFNode : ScriptableObject
 	{
 		[NonSerialized]
-		public SDFEditorGraph graph;
+		public SDFEditorGraph graph; 
 
 		public Rect rect;
-		public Rect titleRect;
-		public string title;
+		[NonSerialized] public Rect titleRect;
+		[NonSerialized] public Rect contentRect;
+		[NonSerialized] public string title;
 
 		//Fields are not serialized by default
 		public bool IsDragged { get; private set; }
 		public bool IsSelected { get; private set; }
 
-		public List<ConnectionPoint> inPoints = new List<ConnectionPoint>();
-		public List<ConnectionPoint> outPoints = new List<ConnectionPoint>();
+		//Dont add points to this list directly! Use AddConnectionPoint<T>(ConnectionPointType) instead!
+		public List<IConnectionPoint> inPoints = new List<IConnectionPoint>();
+		//Dont add points to this list directly! Use AddConnectionPoint<T>(ConnectionPointType) instead!
+		public List<IConnectionPoint> outPoints = new List<IConnectionPoint>();
 
 		public Action<SDFNode> OnRemoveNode;
 
 		//Used for creating new Nodes
-		public void Init(Vector2 position)
+		public virtual void Setup(Vector2 position, SDFEditorGraph graph)
 		{
 			rect = new Rect(position.x, position.y, 10, 10);
+			this.graph = graph;
 			Init();
 		}
 
@@ -42,6 +46,11 @@ namespace SDFEditor
 
 		//Use this to initialize content
 		protected abstract void OnFinishedInit();
+
+		protected virtual void OnEnable()
+		{
+			
+		}
 
 		//Called after graph asses was deserialized
 		public virtual void OnAfterDeserialize(SDFEditorGraph graph)
@@ -66,7 +75,8 @@ namespace SDFEditor
 
 		public virtual void Draw(SDFEditor editor)
 		{
-			GUI.Box(rect, "");
+			GUIStyle style = !IsSelected ? SDFEditor.NodeStyle : SDFEditor.SelectedNodeStyle;
+			GUI.Box(rect, "", style);
 
 			const int titelHeight = 20;
 
@@ -74,8 +84,11 @@ namespace SDFEditor
 
 			GUI.Box(titleRect,title);
 
-			Rect contentRect = rect;
+			contentRect = rect;
+			contentRect.width -= 12;
+			contentRect.x += 6;
 			contentRect.height -= titelHeight;
+			contentRect.y += titelHeight;
 
 			Rect inRect = rect;
 			inRect.width = 20;
@@ -160,6 +173,39 @@ namespace SDFEditor
 		{
 			OnRemoveNode?.Invoke(this);
 			editor.OnClickRemoveNode(this);
+		}
+
+		/// <summary>
+		/// Return the evaluate node value for a given connection point
+		/// </summary>
+		/// <param name="point">ConnectionPoint to evaluate</param>
+		/// <returns></returns>
+		public virtual object EvaluateNode(IConnectionPoint point)
+		{
+			return null;
+		}
+
+		/// <summary>
+		/// Adds the connection point to the in/out list as well as adding it to the asset database
+		/// </summary>
+		/// <param name="p"></param>
+		protected IConnectionPoint AddConnectionPoint<TOne, TTwo>(ConnectionPointType type) where TOne : ConnectionPoint_Generic<TTwo>
+		{
+			TOne newPoint = CreateInstance<TOne>();
+			newPoint.Init(this, type);
+
+			if (type == ConnectionPointType.In)
+			{
+				inPoints.Add(newPoint);
+			}
+			else
+			{
+				outPoints.Add(newPoint);
+			}
+			AssetDatabase.AddObjectToAsset(newPoint, graph);
+			AssetDatabase.SaveAssets();
+
+			return newPoint;
 		}
 	}
 }

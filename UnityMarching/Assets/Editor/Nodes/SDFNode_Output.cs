@@ -7,12 +7,10 @@ namespace SDFEditor
 {
 	public class SDFNode_Output : SDFNode
 	{
-		public SDFNode_Output()
+		public override void Setup(Vector2 position, SDFEditorGraph graph)
 		{
-			outPoints.Add(new ConnectionPoint(this, ConnectionPointType.In));
-			outPoints.Add(new ConnectionPoint(this, ConnectionPointType.In));
-			outPoints.Add(new ConnectionPoint(this, ConnectionPointType.In));
-			outPoints.Add(new ConnectionPoint(this, ConnectionPointType.In));
+			base.Setup(position, graph);
+			AddConnectionPoint<ConnectionPoint_Int, int>(ConnectionPointType.In);
 		}
 
 		protected override void OnFinishedInit()
